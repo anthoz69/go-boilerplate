@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/anthoz69/salepage-api/shared/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
@@ -27,6 +28,12 @@ func StartFiber(
 	r RouteGroup,
 ) *fiber.App {
 	app := fiber.New()
+
+	app.Use(func(c *fiber.Ctx) error {
+		lang := utils.GetLang(c)
+		c.Locals("lang", lang)
+		return c.Next()
+	})
 
 	// Register routes from all modules
 	for _, r := range r.Registrars {
