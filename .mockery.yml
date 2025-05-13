@@ -1,0 +1,8 @@
+with-expecter: true
+inpackage: false
+keepTree: false
+dir: "./internal/core/ports/"
+output: "./mocks"
+outpkg: "mocks"
+all: true
+log-level: "info"
