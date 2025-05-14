@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"log"
 	"os"
 	"os/signal"
 	"syscall"
@@ -52,6 +53,7 @@ func StartFiber(
 		OnStop: func(ctx context.Context) error {
 			shutdownCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 			defer cancel()
+			log.Println("Graceful shutdown server via fx onstop...")
 			return app.ShutdownWithContext(shutdownCtx)
 		},
 	})
@@ -61,6 +63,7 @@ func StartFiber(
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
+		log.Println("Graceful shutdown via os signal")
 		_ = app.Shutdown()
 	}()
 

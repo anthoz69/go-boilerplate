@@ -19,18 +19,20 @@ func (e ErrorResponse) Error() string {
 
 func NewErrorResponse(ctx *fiber.Ctx, code string, message string) error {
 	lang := GetLang(ctx)
-	errCode, ok := constants.ErrMap[code]
+	errCode, ok := constants.MessageMap[code]
 	if !ok {
-		errCode = constants.ErrMap[constants.ErrCode5000]
-		return ctx.JSON(fiber.Map{
-			"code":      constants.ErrCode5000,
+		errCode = constants.MessageMap[constants.ErrCodeUnexpectedError]
+		return ctx.Status(errCode.HTTPStatus).
+			JSON(fiber.Map{
+				"code":      constants.ErrCodeUnexpectedError,
+				"codeLabel": errCode.CodeLabel[lang],
+				"message":   message,
+			})
+	}
+	return ctx.Status(errCode.HTTPStatus).
+		JSON(fiber.Map{
+			"code":      errCode.Code,
 			"codeLabel": errCode.CodeLabel[lang],
 			"message":   message,
 		})
-	}
-	return ctx.JSON(fiber.Map{
-		"code":      errCode.Code,
-		"codeLabel": errCode.CodeLabel[lang],
-		"message":   message,
-	})
 }
