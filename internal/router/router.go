@@ -10,6 +10,9 @@ import (
 
 	"github.com/anthoz69/salepage-api/shared/utils"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
 	"go.uber.org/fx"
 )
@@ -29,6 +32,10 @@ func StartFiber(
 	r RouteGroup,
 ) *fiber.App {
 	app := fiber.New()
+
+	app.Use(logger.New())
+	app.Use(cors.New())
+	app.Use(recover.New())
 
 	app.Use(func(c *fiber.Ctx) error {
 		lang := utils.GetLang(c)
