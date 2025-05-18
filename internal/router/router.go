@@ -11,6 +11,7 @@ import (
 	"github.com/anthoz69/salepage-api/shared/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/healthcheck"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/spf13/viper"
@@ -42,6 +43,8 @@ func StartFiber(
 		c.Locals("lang", lang)
 		return c.Next()
 	})
+
+	app.Use(healthcheck.New())
 
 	// Register routes from all modules
 	for _, r := range r.Registrars {
